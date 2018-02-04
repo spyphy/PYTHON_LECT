@@ -1,0 +1,150 @@
+\input{_head.tex}
+\newif\ifFULL
+\FULLtrue
+
+\begin{document}
+\footskip=30pt
+\date{}
+\title{GUI}
+\maketitle
+\pagestyle{plain}
+%\fontsize{13}{14pt}\selectfont   
+%\fontsize{11}{12pt}\selectfont   
+\setcounter{secnumdepth}{2}  % turn off numeration of sections
+\input{styles/style_python.tex}
+
+
+\section{Tkinter}
+
+Пример для python3:
+
+\begin{lstlisting}
+from tkinter import Label
+widget = Label(None, text='Hello world')
+widget.pack()
+widget.mainloop()
+\end{lstlisting}
+
+В python2 библиотека называется Tkinter (с большой буквой).
+
+Следующий пример рисует две кнопки на окне-виджете верхнего уровня \verb|root|:
+
+\begin{lstlisting}
+from tkinter import *
+root = Tk()
+Button(root, text='YES', command=root.quit).pack(side=LEFT)
+Button(root, text='NO', command=root.quit).pack(side=RIGHT)
+root.mainloop()
+\end{lstlisting}
+
+
+\section{PIL}
+
+% https://habrahabr.ru/post/163663/
+
+\begin{lstlisting}
+from PIL import Image
+im = Image.open("Forest-large.jpg")
+im.size
+f.close()
+im.format
+\end{lstlisting}
+
+Рисование:
+\begin{lstlisting}
+from PIL import Image, ImageDraw
+img = Image.new("RGBA", (320,320), (0,0,0,0))
+draw = ImageDraw.Draw(img)
+draw.ellipse((10,10,300,300), fill="red", outline="red")
+del draw
+image.save("/path/to/save/test.png", "PNG")
+\end{lstlisting}
+
+\verb|im.load()| --- загрузка пикселей.
+
+Попиксельно
+\begin{lstlisting}
+>>> img = Image.open("foto.jpg")
+>>> img.getpixel((25, 45))              # Получаем цвет пикселя
+(122, 86, 62)
+>>> img.putpixel((25, 45), (255, 0, 0)) # Изменяем цвет пикселя
+>>> img.getpixel((25, 45))              # Получаем цвет пикселя
+(255, 0, 0)
+>>> img.show()    
+\end{lstlisting}
+
+либо
+
+\begin{lstlisting}
+>>> img = Image.open("foto.jpg")
+>>> obj = img.load()
+>>> obj[25, 45]                    # Получаем цвет пикселя
+(122, 86, 62)
+>>> obj[25, 45] = (255, 0, 0)      # Задаем цвет пикселя (красный)   
+\end{lstlisting}
+
+
+
+Анализ скриншота:
+\begin{lstlisting}
+import pyautogui as a
+from PIL import Image, ImageDraw
+im = a.screenshot()
+p = im.load()
+x0, y0 = 100, 100
+w = 10
+sum = 0
+for x in range(x0-w, x0+w):
+	sum = 
+\end{lstlisting}
+
+
+
+\section{Бот на python}
+
+\subsection{PyAutoGUI}
+
+\href{https://pypi.python.org/pypi/PyAutoGUI}{PyAutoGUI}
+
+\begin{verbatim}
+sudo apt-get install python-xlib
+sudo apt-get install -y scrot python-tk python-dev python3-tk python3-dev
+pip install pyautogui	# это работает только из графич.режима
+pip3 install pyautogui
+
+cd ./PyAutoGUI-0.9.33
+python setup.py install
+
+import pyautogui as a
+a.moveTo(100, 150) 
+a.click() 
+
+a.doubleClick() 
+a.typewrite('Hello world!', interval=0.25) 
+
+Пример ввода текста:
+a.moveTo(499, 670); a.click(); a.typewrite('Hello world!', interval=0.1); a.press('enter')
+
+im = a.screenshot()
+im.save('my_screenshot.png') 
+
+x, y = a.locateCenterOnScreen('bt.png'); a.moveTo(x, y); a.click();
+
+a.scroll(-10, x=400, y=400) 
+или
+a.moveTo(100, 150); a.click(); pyautogui.scroll(10)
+
+for i in range(1, 3):
+	x, y = a.locateCenterOnScreen('bt.png'); 
+	a.moveTo(x, y); 
+	a.click(); 
+	a.scroll(-30, x=400, y=400);
+\end{verbatim}
+
+\subsection{selenium}
+
+sudo pip install -U selenium
+
+\end{document} 
+
+

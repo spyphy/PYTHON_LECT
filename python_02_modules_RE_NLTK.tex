@@ -1,0 +1,143 @@
+\input{_head.tex}
+\newif\ifFULL
+\FULLtrue
+
+\begin{document}
+\footskip=30pt
+\date{}
+\title{GUI}
+\maketitle
+\pagestyle{plain}
+%\fontsize{13}{14pt}\selectfont   
+%\fontsize{11}{12pt}\selectfont   
+\setcounter{secnumdepth}{2}  % turn off numeration of sections
+\input{styles/style_python.tex}
+
+
+\section{Обработка текста}
+
+\subsection{split and join}$~$
+
+\verb|str.split(delimiter?, maxsplits?)| --- разбитие строк по пробельный символам (пробел, табуляция, перевод строки) либо с указанием разделителя
+
+\verb|delimiter.join(iterable)| --- объединяет последовательность подстрок, добавляя разделитель delimiter.
+
+\begin{lstlisting}
+>>> t = 'Hello    World   !'
+>>> t.split()
+['Hello', 'World', '!']
+>>> s = t.split()
+>>> '---'.join(s)
+'Hello---World---!'
+\end{lstlisting}
+
+
+\subsection{Шаблоны. Модуль string}$~$
+
+\begin{lstlisting}
+>>> import string
+>>> vals = {'F': 'Ivanov', 'N':'Ivan'}
+>>> t = string.Template('---$F---$N----')
+>>> t.substitute(vals)
+'---Ivanov---Ivan----'
+\end{lstlisting}
+
+
+\subsection{Модуль re}$~$
+
+\verb|import re|
+
+Основные функции модуля re:
+\begin{itemize}
+ \item \verb|re.compile(pattern, [flags,] string)| --- собирает регулярное выражение в отдельный объект;
+ \item \verb|re.match(pattern, string)| --- ищет по заданному шаблону в начале строки;
+ \item \verb|re.search()|
+ \item \verb|re.findall()|
+ \item \verb|re.split()|
+ \item \verb|re.sub()|
+\end{itemize}
+
+Варианты использования
+
+1) без комплирирования:
+
+\begin{lstlisting}
+text = "Hello 1213213 132 world"
+mobj = re.match('Hello (.*) world', text)
+print(mobj.group(0)) # Hello 1213213 132 world
+print(mobj.group(1)) # 1213213 132
+\end{lstlisting}
+
+2) с комплирированием шаблона (работает быстрее):
+
+\begin{lstlisting}
+text = "Hello 1213213 132 world"
+patt_obj = re.compile('Hello (.*) world')
+mobj = patt_obj.match(text)
+print(mobj.group(0)) # Hello 1213213 132 world
+print(mobj.group(1)) # 1213213 132
+\end{lstlisting}
+
+
+
+
+\section{Pymorphy2}
+
+pymorphy2 - морфологический анализатор для русского языка.
+
+% https://pymorphy2.readthedocs.io/en/0.2/user/index.html
+
+Install:
+
+\begin{lstlisting}
+sudo pip3 install pymorphy2
+sudo pip3 install pymorphy2-dicts
+sudo pip3 install DAWG-Python
+\end{lstlisting}
+
+
+\begin{lstlisting}
+import pymorphy2
+morph = pymorphy2.MorphAnalyzer()
+m = morph.parse('стали')
+...
+
+for a in m:
+	print(a)
+\end{lstlisting}
+
+
+%===========
+
+\section{NLTK}
+
+% http://www.nltk.org/book/ch05.html
+
+\begin{lstlisting}
+import nltk
+
+\end{lstlisting}
+
+Verbs: VBD (past tense) and VBN (past participle)
+
+
+\begin{verbatim}
+ADJ	adjective	new, good, high, special, big, local
+ADP	adposition	on, of, at, with, by, into, under
+ADV	adverb	really, already, still, early, now
+CONJ	conjunction	and, or, but, if, while, although
+DET	determiner, article	the, a, some, most, every, no, which
+NOUN	noun	year, home, costs, time, Africa
+NUM	numeral	twenty-four, fourth, 1991, 14:24
+PRT	particle	at, on, out, over per, that, up, with
+PRON	pronoun	he, their, her, its, my, I, us
+VERB	verb	is, say, told, given, playing, would
+.	punctuation marks	. , ; !
+X	other	ersatz, esprit, dunno, gr8, univeristy 
+\end{verbatim}
+
+
+
+\end{document} 
+
+

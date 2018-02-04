@@ -1,0 +1,59 @@
+\input{_head.tex}
+\newif\ifFULL
+\FULLtrue
+
+\begin{document}
+\footskip=30pt
+\date{}
+\title{Collections and data structure}
+\maketitle
+\pagestyle{plain}
+%\fontsize{13}{14pt}\selectfont   
+%\fontsize{11}{12pt}\selectfont   
+\setcounter{secnumdepth}{2}  % turn off numeration of sections
+\input{styles/style_python.tex}
+
+
+\section{Модуль collections}
+
+Модуль \verb|collections| --- альтернатива встроенным контейнерам \verb|dict, list, set| и \verb|tuple|.
+
+Контейнеры модуля \verb|collections| (ver.3.7):
+
+\begin{itemize}
+ \item \verb|namedtuple()| ---	factory function for creating tuple subclasses with named fields;
+ \item \verb|deque| --- 	list-like container with fast appends and pops on either end;
+ \item \verb|ChainMap| --- 	dict-like class for creating a single view of multiple mappings;
+ \item \verb|Counter| --- 	dict subclass for counting hashable objects;
+ \item \verb|OrderedDict| --- 	dict subclass that remembers the order entries were added;
+ \item \verb|defaultdict| --- 	dict subclass that calls a factory function to supply missing values;
+ \item \verb|UserDict| --- 	wrapper around dictionary objects for easier dict subclassing;
+ \item \verb|UserList| --- 	wrapper around list objects for easier list subclassing;
+ \item \verb|UserString| --- 	wrapper around string objects for easier string subclassing.
+\end{itemize}
+
+Основные методы класса \verb|deque|: 
+\begin{itemize}
+ \item \verb|append(x)| --- добавление справа
+ \item \verb|appendleft(x)|  --- добавление слева
+ \item \verb|pop(x)| --- извлечение элемента справа
+ \item \verb|popleft(x)| --- извлечение элемента слева
+\end{itemize}
+Также есть методы \verb|clear(), copy(), count(), index, insert, remove|,\\  \verb|reverse, rotate|.
+
+
+
+\begin{lstlisting}
+data = {'Name': ['Vasya', 'Dmitry', 'Petya'], 'Mark': [7.2, 8.2, 9.0], 'IQ': [100, 120, 119]}
+df = DataFrame(data)
+df.mean()
+df.std()
+df.corr()
+df.cov()
+\end{lstlisting}
+
+
+
+\end{document} 
+
+

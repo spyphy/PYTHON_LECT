@@ -1,0 +1,234 @@
+\input{_head.tex}
+\newif\ifFULL
+\FULLtrue
+
+\begin{document}
+\footskip=30pt
+\date{}
+\title{Django}
+\maketitle
+\pagestyle{plain}
+%\fontsize{13}{14pt}\selectfont   
+%\fontsize{11}{12pt}\selectfont   
+\setcounter{secnumdepth}{2}  % turn off numeration of sections
+\input{styles/style_python.tex}
+
+
+\section{web python без django}
+
+В Python уже есть встроенный CGI сервер, поэтому его настройка (под linux) элементарна.
+
+Для запуска из консоли --- нужно из той папки, где мы хотим работать, выполнить:
+
+\begin{lstlisting}
+python3 -m http.server --cgi
+\end{lstlisting}
+
+Теперь откройте браузер и в адресной строке наберите \verb|localhost:8000|.
+
+Теперь в той папке, где мы запустили сервер, создаем папку \verb|cgi-bin| (у меня она уже создана).
+
+
+
+\section{Django vs Flask}
+
+\url{https://devman.org/qna/18/chem-dzhango-luchshehuzhe-flaska/}
+
+Основные отличия
+\begin{itemize}
+
+  \item Flask --- легковесный и гибкий фреймворк. Он пуст чуть более, чем полностью. Это позволяет выбирать модули под конкретные задачи и устанавливать их по мере необходимости.
+
+ \item Django --- вс\"е-в-одном фреймворк для стандартного набора задач, вроде админки, регистрации, базы данных, имейлов и т.п. Вариант, когда лень или некогда выбирать батарейки.
+
+\end{itemize}
+
+Состоит из проекта, который делится на приложения. Проект - корневая папка и глобальные настройки. Приложения - это функционал сайта, разбитый по разным модулям. У каждого проекта они свои. Примеры приложений: users отвечает за поведение и модели пользователей, API предоставляет методы для внешнего взаимодействия с сайтом и т.п. С непривычки такая система может показаться непонятной и сложной. Зато так выглядит 95\% сайтов на джанго, что упрощает чтение чужого кода.
+
+Новый проект создаётся при помощи команды \verb|django-admin startproject project_name|. Фреймворк создаёт все необходимые файлы сам.
+
+в джанге все приколочено гвоздями. Она годится для стандартного набора задач и если с реальностью это не сходится, от джанги надо уходить.
+
+В Flask нет собственной ORM, поэтому обычно подключается библиотека SQLAlchemy.
+
+Django комплектуется встроенной Django ORM. 
+
+
+\section{Принципы Django (а также Flask и др.)}
+
+\emph{Слабая связанность} --- взаимозаменяемость составных частей (изменение одной части кода не отразится на другой).
+
+
+\section{Начало работы с Django}
+
+% infa: https://djbook.ru/rel1.4/intro/tutorial01.html
+
+\subsection{Установка Django}
+
+\verb|sudo pip3 install django|
+
+\begin{lstlisting}
+>>> import django
+>>> django.VERSION
+\end{lstlisting}
+
+
+\subsection{Создание проекта}
+
+\verb|django-admin.py startproject mysite|
+
+(вводится без слова python. если не работает, то см. скрипт в /usr/local/bin)
+
+В каталоге с именем mysite будут созданы файлы:
+
+\begin{itemize}
+\item \verb|./manage.py| --- скрипт, который позволяет взаимодействовать с проектом Django. 
+
+\item \verb|./mysite/__init__.py|: пустой файл, который указывает Python, что текущий каталог является пакетом Python.
+
+\item \verb|./mysite/settings.py|: Настройки/конфигурация проекта.
+
+\item \verb|./mysite/urls.py|: Конфигурация URL-ов для проекта Django.
+
+\item \verb|./mysite/wsgi.py|: Точки входа для WSGI-совместимый веб-серверов. 
+
+\end{itemize}
+
+
+\subsection{Запуск сервера}
+
+Из каталога проекта (mysite) выполнить:
+
+\verb|python3 manage.py runserver|
+
+Сайт будет доступен по адресу \url{http://127.0.0.1:8000/}
+
+
+
+\subsection{Настройка баз данных}
+
+По умолчанию используется \verb|sqlite3| --- база данных будет файлом, который создастся автоматически.
+
+SQLite --- это встраиваемая кроссплатформенная БД. Сервера нету, само приложение является сервером. Доступ к БД происходит через <<подключения>> к БД (нечто вроде хэндла файла ОС), которые мы открываем через вызов соот-й функции DLL. При открытии указывается имя файла БД. Если такого нету --- он автоматически создается.
+
+
+\subsection{Создание моделей}
+
+
+Модель --- это основной источник данных. Он содержит набор полей и поведение данных, которые вы храните. Django следует принципу DRY. Смысл в том, что бы определять модели в одном месте.
+
+
+\subsection{Добавление страниц и URL}$~$
+
+1) в корне проекта создаем файл ./view.py, куда вставляем код функций представлений, которые будут возвращать экземпляр класса \verb|HttpResponse|, содержащий html-код или другие данные:
+
+\begin{lstlisting}
+from django.http import HttpResponse
+
+def hello(request):
+	return HttpResponse("Hello world")
+
+import datetime	
+	
+def date(request):
+	now = datetime.datetime.now()
+	html = "<html><body> Now is {0} </body></html>".format(now)
+	return HttpResponse(html)
+\end{lstlisting}
+
+2) в \verb|urls.py| добавляем \emph{шаблон URL}, которую связываем с нашей \emph{функцией-представлением} hello (функцию нужно импортировать из модуля view):
+
+\begin{lstlisting}
+from view import hello, date
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('hello/', hello),
+    path('date/', date),    
+]
+\end{lstlisting}
+
+--- тогда любой запрос к /hello/ будет обрабатываться функцией \verb|hello|.
+
+
+Может также использоваться функция \verb|url()| вместо path. Функция url() принимает четыре аргумента, два обязательных: regex и view, и два необязательных: kwargs и name. 
+\begin{lstlisting}
+from django.conf.urls import url
+urlpatterns = [
+    url(r'^$', view.index, name='index'),
+]
+\end{lstlisting}
+
+
+
+\subsection{Параметрические шаблоны URL}$~$
+
+
+\begin{lstlisting}
+path('time/\d+/$', date),
+\end{lstlisting}
+
+
+
+
+\subsection{Шаблон HTML-страниц в отдельный файл}$~$
+
+Создаем каталог \verb|./templates|, в котором будут размещаться шаблоны html-кода.
+
+Добавляем этот путь в settings. \\
+1) в Django-1 это параметр \verb|TEMPLATE_DIRS|.\\
+2) в Django-2 это выглядит так:
+\begin{lstlisting}
+TEMPLATES = [
+    { 'DIRS': ['/var/www/dj/templates'],
+\end{lstlisting}
+
+Создаем шаблон:
+\begin{lstlisting}[caption="jap.utf"]
+<HTML><HEAD>
+<meta http-equiv="Content-Type: content="text/plain; charset=utf-8">
+<TITLE> 111 </TITLE></HEAD>
+<BODY>
+Hello <b>{{ your_name }}!</b> <br>
+</BODY> 
+</HTML> 
+\end{lstlisting}
+
+Здесь в \verb|{{ your_name }}| стоит переменная, которую мы будем передавать из функции-представления:
+\begin{lstlisting}[caption="view.py"]
+from django.shortcuts import render_to_response
+def jap(request):
+	return render_to_response('jap.utf', {'your_name': 'Andrei'})
+\end{lstlisting}
+Не забываем про пути:
+\begin{lstlisting}[caption="urls.py"]
+from view import hello, date, jap
+    path('jap/', jap),
+\end{lstlisting}
+
+Здесь мы использовали обертку \verb|render_to_response| над HttpResponse(html). Расширенная версия будет выглядеть так:
+\begin{lstlisting}[caption="view.py"]
+from django.template.loader import get_template
+def jap2(request):
+	dc = {'your_name': 'Ivan'}
+	t = get_template('jap.utf')
+	html = t.render(dc)
+	return HttpResponse(html)
+\end{lstlisting}
+
+В старых версиях (Django <=1.8) надо было писать
+\verb|html = t.render(Context(dc))|
+но в 2.0 это выдает ошибку.
+
+
+\section{Администрирование}$~$
+
+\verb|python3 manage.py createsuperuser| ---  создать пользователя
+
+залогиться: \url{http://127.0.0.1:8000/admin/}
+
+
+
+
+\end{document} 
+
