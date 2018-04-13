@@ -1,6 +1,6 @@
-\documentclass[a4paper,14pt,reqno,onesize]{amsart}
+\documentclass[a4paper,14pt,reqno,oneside]{amsart}
 \usepackage[14pt]{extsizes}
-\usepackage[left=1cm,right=1.5cm,top=1cm,bottom=1.7cm,bindingoffset=0cm]{geometry}
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=1.7cm,bindingoffset=0cm]{geometry}
 \usepackage[russian]{babel}
 \usepackage[all,arc]{xy}
 \usepackage[all]{xy}
@@ -8,17 +8,13 @@
 %\usepackage{datetime}
 \usepackage{comment}
 \usepackage{style}
+\usepackage{showkeys} 
+\usepackage{hyperref}
 
-%\usepackage{showkeys} 
-\usepackage{python}
 
 %\usepackage{graphicx} 
 \usepackage{graphics} 
 \usepackage[pngtex]{graphicx} 
-
-\usepackage{hyperref, xcolor}
-\definecolor{LINKcolor}{HTML}{000055} % цвет ссылок
-\hypersetup{colorlinks=true, citecolor=blue, filecolor=green, linkcolor=LINKcolor, urlcolor=blue, pdftex}
 
 \usepackage{enumitem} % нужно, чтобы убрать лишние пробелы между строками в item
 \setlist{nolistsep} % нужно, чтобы убрать лишние пробелы между строками в item
@@ -26,16 +22,64 @@
 
 \usepackage{color} %% это для отображения цвета в коде
 \usepackage{xcolor}
+\usepackage{pagecolor}  
+% определяем цвета
+\definecolor{bgcolor}{HTML}{F0F8FF}  %{F0FFFF}
+\definecolor{codecolor}{HTML}{F5F5DC}  %{F0FFFF}
+%\definecolor{codecolor}{HTML}{FFFFFF}  %{F0FFFF}
+\definecolor{codecolor_light}{HTML}{D9D9FF}  %{F0FFFF}
+\definecolor{codecolor2}{HTML}{333333}  %{F0FFFF}
+\definecolor{boxcolor}{HTML}{EEE8AA}  %{F0FFFF}
+\definecolor{bg02}{rgb}{0.95,0.95,0.95}
+
 \usepackage{listings}
 %\lstdefinestyle{sharpc}{language=[Sharp]C, frame=lr, rulecolor=\color{blue!80!black}}
+\usepackage{minted} % еще один пакет подстветка синтаксиса. для его работы нужно установить python-pygments и добавить оптию "-shell-escape" в Build -> PDFLaTeX
+%\usepackage{colortbl}
+\usemintedstyle{pastie}
+
+\newminted{python}{bgcolor=codecolor, linenos, framesep=0mm, numbersep=12pt, tabsize=3}
+\newminted{haskell}{bgcolor=codecolor, linenos, framesep=0mm, numbersep=12pt, tabsize=3}
+\newminted{csharp}{bgcolor=codecolor, linenos, framesep=0mm, numbersep=12pt, tabsize=3}
+\newminted{java}{bgcolor=codecolor, linenos, framesep=0mm, numbersep=12pt, tabsize=3}
+\newminted{c++}{bgcolor=codecolor, linenos, framesep=0mm, numbersep=12pt, tabsize=3}
+\newminted{go}{bgcolor=codecolor, linenos, framesep=0mm, numbersep=12pt, tabsize=3}
+\newminted{html}{bgcolor=codecolor, linenos, framesep=0mm, numbersep=12pt, tabsize=3}
+\newminted{jinja}{bgcolor=codecolor, linenos, framesep=0mm, numbersep=12pt, tabsize=3}
+\newminted{sql}{bgcolor=codecolor_light, linenos, framesep=0mm, numbersep=12pt, tabsize=3}
+
+
+% frame around code
+\usepackage{mdframed} 
+\mdfsetup{linecolor=gray, linewidth=1.3pt, innerrightmargin=0pt, innerleftmargin=0pt, innertopmargin=-6pt, innerbottommargin=-6pt} % skipabove=0pt,skipbelow=0pt,
+\mdfdefinestyle{myframe}{%
+    outerlinewidth=1pt
+}
+\BeforeBeginEnvironment{minted}{\begin{mdframed}}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+
+\setminted[python]{bgcolor=codecolor,linenos,numbersep=12pt,tabsize=3}
+\setminted[haskell]{bgcolor=codecolor,linenos,numbersep=12pt,tabsize=3}
+\setminted[csharp]{bgcolor=codecolor,linenos,numbersep=12pt,tabsize=3}
+\setminted[java]{bgcolor=codecolor,linenos,numbersep=12pt,tabsize=3}
+\setminted[c++]{bgcolor=codecolor,linenos,numbersep=12pt,tabsize=3}
+\setminted[go]{bgcolor=codecolor,linenos,numbersep=12pt,tabsize=3}
+\setminted[html]{bgcolor=codecolor,linenos,numbersep=12pt,tabsize=3}
+\setminted[jinja]{bgcolor=codecolor,linenos,numbersep=12pt,tabsize=3}
+\setminted[sql]{bgcolor=codecolor_light,linenos,numbersep=12pt,tabsize=3}
+
+
+
 
 \usepackage{caption}
+
 % Заголовок кода:
 %\DeclareCaptionFont{white}{\color{сaptiontext}}
 \DeclareCaptionFont{white}{\color{darkgray}} 
 \DeclareCaptionFormat{listing}{\colorbox{white}{\parbox{\textwidth}{#1#2#3}}}
 %\DeclareCaptionFormat{listing}{\parbox{\linewidth}{\colorbox{сaptionbk}{\parbox{\linewidth}{#1#2#3}}\vskip-4pt}}
-\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+
+\captionsetup[lstlisting]{format=listing ,labelfont=white, textfont=white}
 \renewcommand{\lstlistingname}{Код} % Переименование Listings в нужное именование структуры
 
 % Цвета для кода
@@ -43,6 +87,7 @@
 \definecolor{string}{HTML}{B40000} % цвет строк в коде
 \definecolor{comment}{HTML}{008000} % цвет комментариев в коде
 \definecolor{keyword}{HTML}{1A00FF} % цвет ключевых слов в коде
+%\definecolor{keys}{HTML}{0000000} % цвет ключевых слов в коде
 \definecolor{morecomment}{HTML}{8000FF} % цвет include и других элементов в коде
 \definecolor{сaptiontext}{HTML}{FFFFFF} % цвет текста заголовка в коде
 \definecolor{сaptionbk}{HTML}{999999} % цвет фона заголовка в коде
@@ -70,7 +115,7 @@
 %\newcommand*{\true}{ \begin{verbatim}true\end{verbatim} } 
 
 
-\input{styles/style_thm.tex}
+\input{style_thm.tex}
 
 
 % диаграммы

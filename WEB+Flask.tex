@@ -11,20 +11,352 @@
 %\fontsize{13}{14pt}\selectfont   
 %\fontsize{11}{12pt}\selectfont   
 \setcounter{secnumdepth}{2}  % turn off numeration of sections
-\input{styles/style_python.tex}
+%\input{styles/style_python.tex}
 
 
 \section{Flask}
 
 \url{http://flask-russian-docs.readthedocs.io/ru/latest/quickstart.html}
 
+\section{First application}
+
+Создаем файл hello.py:
+
+\begin{minted}{python}
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'Hello World!'
+
+if __name__ == '__main__':
+    app.run()
+\end{minted}
+
+Запускаем:
+
+\verb|python3 hello.py|
+
+Вс\"e! По адресу \url{http://127.0.0.1:5000/} будет наша страничка.
+
+Созданный объект \verb|app| класса \verb|Flask| --- это и есть наше WSGI-приложение (WSGI --- Web Server Gateway Interface).
 
 
 
+\subsection{Структура проекта}
+
+Рекомендуемая стр-ра
+
+\begin{verbatim}
+config.py
+requirements.txt
+run.py
+instance/
+    config.py
+yourapp/
+    __init__.py
+    views.py
+    models.py
+    forms.py
+    static/
+    templates/ 
+\end{verbatim}
+
+
+\subsection{HTML-шаблоны}
+
+HTML-файла располагаются в папке templates
+
+Их вывод осуществляется, например, так:
+
+
+\begin{minted}{python}
+@app.route('/lay/')
+def lay():
+	return render_template('site.html')
+\end{minted}
+
+
+
+
+
+\subsection{Передача данных в шаблон}
+
+\begin{minted}{python}
+	date = 'some data'
+	return render_template('template.html', data = data )
+\end{minted}
+
+
+\begin{minted}{html}
+<!DOCTYPE html>
+<html>
+ <body>
+	Some text
+	{{ data }}
+ </body>
+</html>
+\end{minted}
+
+
+
+\subsection{css и статические файлы}
+
+Для подключения ccs и img в шаблон html вставляется:
+
+\begin{minted}{html}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<img src="{{ url_for('static', filename='img/1.jpg') }}" />
+\end{minted}
+
+при этом файлы распалагаются в каталоге \verb|static|: \\
+static/css/style.css \\
+static/img/1.jpg
+
+
+
+\section{Jinja2}
+
+Jinja2 --- язык шаблонов для Flask и не только.
+
+
+\begin{minted}{jinja}
+{% if not session.logged_in %}
+	{{ data.html | safe }}
+{% else %}
+	{{ somedata }}
+{% endif %}
+
+{% for entry in entries %}
+	<li><h2>{{ entry.title }}</h2>{{ entry.text|safe }}
+{% else %}
+	<li><em>Unbelievable.  No entries here so far</em>
+{% endfor %}
+\end{minted}
+
+
+Разделители (delimiter):
+\begin{minted}{jinja}
+{% ... %} for Statements
+{{ ... }} for Expressions to print to the template output
+{# ... #} for Comments not included in the template output
+#  ... ## for Line Statements
+\end{minted}
+
+Переменные:
+\begin{minted}{jinja}
+{{ foo.bar }}
+{{ foo['bar'] }}
+\end{minted}
+
+Литераты (Literals):
+\begin{itemize}
+ \item \verb|''Hello World''|
+ \item \verb|42 / 42.23|
+ \item \verb|['l','i','s','t']|
+ \item \verb|('tup','le')|
+ \item \verb|{'di' : 'ct'}|
+ \item \verb|true, false|.
+\end{itemize}
+
+Операции:
+\begin{itemize}
+ \item Сравнение: \verb|==, !=, >, >=, <, <=|
+\end{itemize}
+
+
+
+
+
+%-----------------------------
+\newpage
+\section{Работа с URL}
+
+\subsection{Шаблон адреса URL}
+
+\begin{minted}{python}
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    return 'You want path: %s' % path
+    
+    
+\end{minted}
+
+\subsection{Класс request}
+
+\begin{minted}{python}
+from flask import request
+>>> type(request)
+<class 'werkzeug.local.LocalProxy'>
+\end{minted}
+
+\begin{verbatim}
+request.url:                 http://127.0.0.1:5000/alert/dingding/test?x=y
+request.base_url:            http://127.0.0.1:5000/alert/dingding/test
+request.url_charset:         utf-8
+request.url_root:            http://127.0.0.1:5000/
+str(request.url_rule):       /alert/dingding/test
+request.host_url:            http://127.0.0.1:5000/
+request.host:                127.0.0.1:5000
+request.script_root:
+request.path:                /alert/dingding/test
+request.full_path:           /alert/dingding/test?x=y 
+\end{verbatim}
+
+
+
+
+
+
+%-----------------------------
+\newpage
+\section{Плагины}
+
+\subsection{Menue}
+
+\verb|pip3 install Flask-Menu|
+
+
+
+
+
+
+
+%============================
+
+\newpage
+
+\section{Flask + Apache}
+
+{\bf WSGI} (англ. Web Server Gateway Interface) --- стандарт взаимодействия между Python-программой, выполняющейся на стороне сервера, и самим веб-сервером, например Apache.
+
+WSGI предоставляет простой и универсальный интерфейс между большинством веб-серверов и веб-приложениями или фреймворками.
+
+По стандарту, WSGI-приложение должно удовлетворять следующим требованиям:
+\begin{itemize}
+ \item должно быть вызываемым (callable) объектом (обычно это функция или метод)
+ \item принимать два параметра:
+ \item словарь переменных окружения (environ)
+ \item обработчик запроса (\verb|start_response|)
+ \item вызывать обработчик запроса с кодом HTTP-ответа и HTTP-заголовками
+ \item возвращать итерируемый объект с телом ответа
+\end{itemize}
+
+
+\subsection{Установка mod-wsgi}$~$
+
+\verb|apt-get install libapache2-mod-wsgi|
+
+\subsection{Настройка Apache}
+
+\begin{minted}{html}
+<VirtualHost *>
+    ServerName example.com
+
+    WSGIDaemonProcess yourapplication user=user1 group=group1 threads=5
+    WSGIScriptAlias / /var/www/yourapplication/yourapplication.wsgi
+
+    <Directory /var/www/yourapplication>
+        WSGIProcessGroup yourapplication
+        WSGIApplicationGroup %{GLOBAL}
+        Order deny,allow
+        Allow from all
+    </Directory>
+</VirtualHost>
+\end{minted}
+
+
+
+\subsection{Создание файла .wsgi}
+
+Этот файл (в корне проекта) содержит код, выполняемый \verb|mod_wsgi| для получения объекта приложения:
+
+\begin{minted}{python}
+from yourapplication import app as application
+\end{minted}
+
+Объект с именем \verb|application| будет использоваться в качестве приложения.
+
+На диске должен быть также файл \verb|yourapplication.py|, в котором создается объект app класса flask.
+
+\vspace{4mm}
+
+Для хостинга fullspace:
+
+\begin{minted}{python}
+# -*- coding: utf-8 -*-
+
+import os
+import sys
+import time
+import traceback
+import signal
+
+activate_this = '/home/s/spyphyru/.virtualenv/bin/activate_this.py'
+with open(activate_this) as f:
+    code = compile(f.read(), activate_this, 'exec')
+    exec(code, dict(__file__ = activate_this))
+
+sys.path.insert(1,'/home/s/spyphyru/test.proger.site')
+
+from main import app as application
+
+if __name__ == "__main__":
+	application.run(debug=True, port=8000)
+\end{minted}
+
+
+
+%-----------
 
 \section{Flask + MongoDB}
 
 \url{https://flask-pymongo.readthedocs.io/en/latest/}
+
+
+%============================
+
+\section{Bokeh}
+
+\begin{verbatim}
+sudo pip3 install bokeh
+\end{verbatim}
+
+
+
+
+
+
+
+%============================
+
+\section{Dash, React}
+
+Dash: \url{https://tproger.ru/translations/reactive-web-apps-with-python/}
+
+React: \url{https://tproger.ru/translations/react-basic-weather-app/}
+
+
+Приложения на \verb|Dash| --- веб-серверы, которые запускают Flask и связывают пакеты \verb|JSON| через HTTP-запросы. Интерфейс Dash формирует компоненты, используя \verb|React.js|.
+
+Install
+\begin{verbatim}
+sudo pip3 install dash dash-renderer dash-html-components dash-core-components plotly
+\end{verbatim}
+
+Чтобы Dash работал, нужно в wsgi-файле строку
+\begin{minted}{python}
+from myapp import app as application
+\end{minted}
+заменить на
+\begin{minted}{python}
+from myapp import app
+application = app.server
+\end{minted}
+
 
 \end{document} 
 

@@ -21,6 +21,83 @@
 
 
 
+\section{doctest, unittest, pytest --- обзор}
+
+\subsection{doctest}$~$
+
+doctest --- тест документации
+
+\begin{minted}{python}
+def mult(a):
+	"""
+	>>> mult(2)
+	8
+	"""
+	return 4*a
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod(verbose=True)
+\end{minted}
+
+
+\subsection{модульные тесты}$~$
+
+\verb|unittest| и \verb|pytest| --- модули для проведения модульных тестов.
+
+\begin{itemize}
+ \item \verb|unittest| --- стандартный питоновский модуль (достаточно старый, но все еще часто используется), пострен по принципу java-тестов;
+ \item \verb|pytest| --- более новый и удобный модуль.
+\end{itemize}
+ 
+\vspace{4mm} 
+
+\subsection{Пример использования unittest:}$~$
+
+\begin{minted}{python}
+import unittest
+from unnecessary_math import multiply
+ 
+class TestUM(unittest.TestCase):
+ 
+    def test_numbers_3_4(self):
+        self.assertEqual( multiply(3,4), 12 ) 
+        
+if __name__ == '__main__':
+	unittest.main()        
+\end{minted}	
+
+Здесь нужно:
+\begin{itemize}
+ \item импортировать \verb|import unnittest|.
+ \item создать класс-потомка от \verb|unittest.TestCase|.
+ \item использовать унаследованные методы, например \verb|self.assertEqual()|.
+\end{itemize}
+
+
+\vspace{4mm} 
+ 
+\subsection{Пример использования pytest:}$~$ 
+\begin{minted}{python}
+from unnecessary_math import multiply
+ 
+def test_numbers_3_4():
+    assert multiply(3,4) == 12 
+\end{minted}	
+
+и запуск 
+\begin{verbatim}
+python -m pytest test_our_module.py
+py.test test_our_module.py 
+\end{verbatim}
+
+При запуске py.test изменяет стандартную питоновскую функцию \verb|assert|.
+
+
+
+
+%---------------
+
 \section{unittest}
 
 
@@ -36,15 +113,16 @@ Install:
 Если требуется проверить, что код бросает некое исключение, можно использовать конструкцию \verb|with pytest.raises|, как в тесте \verb|test_type_error|.
 
 
-\begin{lstlisting}
+\begin{minted}{python}
 # ...
-    @pytest.mark.randomize(num=int, min_num=3, max_num=1000, ncalls=99)
+    @pytest.mark.randomize(num=int, min_num=3, max_num=100,
+		ncalls=99)
     def test_quickcheck(self, num):
         result = list(fibgen(num))
         assert(result[0] < result[-1])
         assert(len(result) == num)
 # ...
-\end{lstlisting}	
+\end{minted}	
 
 Запуск тестов из консоли: \\
 \verb|PYTHONPATH=. py.test| \\
@@ -63,8 +141,96 @@ Install:
  \item \verb|-k имя_модуля| Запуск конкретного набора тестов:
 \end{itemize}
 
+%-------------------------------------     
+\newpage
+
+\section{Логирование}
+
+\begin{minted}{python}
+import logging
+logging.basicConfig(level=logging.INFO)
+logging.info('just info')
+logging.debug('debug info')
+\end{minted}
+
+Запись в файл:
+\begin{minted}{python}
+logging.basicConfig(filename='log_filename.txt',
+	level=logging.DEBUG, 
+	format='%(asctime)s - %(levelname)s - %(message)s')
+\end{minted}
+
+Уровни логирования:
+
+\begin{itemize}
+
+ \item \verb|DEBUG| --- детальное журналирование всего подряд. Нужно для диагностики проблем.
+ \item \verb|INFO| --- подтверждение, что все работает как надо.
+ \item \verb|WARNING| --- индикация об неожиданном поведении программы, или о проблемах, которые могут возникнуть в будущем (например, остается мало места на диске, и т.п.). В целом программа продолжает работать в нормальном режиме.
+ \item \verb|ERROR| --- возникновение серьезных проблем, когда программа не может выполнить некоторые функции.
+ \item \verb|CRITICAL| --- FATAL ошибка, программа не может дальше выполняться.
+\end{itemize}
+
+
+     
+     
      
 
+     
+     
+     
+     
+     
+\newpage     
+%-------------------------------------
+\section{Интеграция Python и C}
+\url{https://lancelote.gitbooks.io/intermediate-python/content/book/python_c_extension.html}
+
+
+\subsection{Модуль ctypes}
+
+1) Создать c-файл
+
+\begin{lstlisting}
+#include <stdio.h>
+
+int add_int(int, int);
+float add_float(float, float);
+
+int add_int(int num1, int num2){
+    return num1 + num2;
+}
+
+float add_float(float num1, float num2){
+    return num1 + num2;
+}
+\end{lstlisting}	
+
+Скомплировать в .so-файл:
+\begin{verbatim}
+gcc -shared -Wl,-soname,adder -o adder.so -fPIC add.c 
+\end{verbatim}
+
+Вызываем из python-кода:
+
+\begin{lstlisting}
+from ctypes import *
+
+# Загружаем библиотеку
+adder = CDLL('./adder.so')
+
+# Находим сумму целых чисел
+res_int = adder.add_int(4,5)
+print("Сумма 4 и 5 = " + str(res_int))
+
+# Находим сумму действительных чисел
+a = c_float(5.5)
+b = c_float(4.1)
+
+add_float = adder.add_float
+add_float.restype = c_float
+print("Сумма 5.5 и 4.1 = " + str(add_float(a, b)))
+\end{lstlisting}	
 
 
         

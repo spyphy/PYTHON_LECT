@@ -1,0 +1,1367 @@
+\input{_head.tex}
+\newif\ifFULL
+\FULLtrue
+\newif\ifPICT
+\PICTtrue
+%\begin{minted}[bgcolor=codecolor,linenos,numbersep=12pt,tabsize=3]{python}
+
+%\usepackage[usenames]{color}
+\usepackage{colortbl}
+
+
+\begin{document}
+\footskip=30pt
+\date{}
+\title{Phyton и теория графов}
+\maketitle
+\pagestyle{plain}
+%\fontsize{13}{14pt}\selectfont   
+%\fontsize{11}{12pt}\selectfont   
+\setcounter{secnumdepth}{3}  % turn off numeration of sections
+\input{styles/style_python.tex}
+
+\setcounter{tocdepth}{2}
+\tableofcontents 
+
+
+
+
+Установить в comp.classrooms:
+
+numpy, theano, flask, sympy
+
+
+\subsection{Лабораторные работы}
+
+\begin{enumerate}
+ \item 1) Типы данных, строки и базовые инструкции (циклы). 2) Ввод-вывод в файл, из файла.
+ \item Пакет Numpy (работа с массивами)
+ \item Итераторы и генераторы. 
+ \item ООП. Классы и перегрузка операций
+ \item Наследование
+ \item GUI: tkinter, PyQt или C\#.
+ \item Элементы функционального программирования. Функции-генераторы. Декораторы.
+ \item Потоки
+ \item NLTK и обработка текста. 
+ \item Pandas - анализ данных
+ \item web: Flask, Django 
+\end{enumerate}
+
+
+\subsection{Содержание лекций по Python}
+
+\begin{enumerate}
+ \item Типы данных. Базовые инструкции (циклы). Ввод-вывод (файлы).
+ \item Итераторы и генераторы. 
+ \item ООП. Классы и перегрузка операций. Наследование
+ \item Элементы функционального программирования. Функции-генераторы. Декораторы.
+ \item GUI: tkinter, PyQt
+ \item Потоки (GIL)
+ \item Высокопроизводительные коллекции (модуль collections). Weekref. Deepcopy.
+ \item Пакет Numpy (работа с массивами)
+ \item Pandas - анализ данных
+ \item web: Flask, Django
+ %\item NLTK и обработка текста. 
+ %\item GIT 
+\end{enumerate}
+
+\vspace{5mm}
+\newpage
+
+\section{Обзор языка Python}$~$
+
+\textbf{Python} --- мультипарадигмальный интерпретируемый язык программирования общего назначения.
+
+Создатель --- Guido van Rossum. Первая версия появилась в 1991 г.
+
+Исходный код интерпретатора распространяется под свободной лицензией Python Software Foundation License, позволяющей использовать его без ограничений в любых приложениях, включая проприетарные.
+
+\vspace{4mm}
+
+Основные сферы применения Python:
+\begin{itemize}
+ \item Веб-разработка: синхоронные фреймворки Django, Flask и асинхронные Tornado, Twisted, Aiohttp.
+ \item Научные расчеты (как альтернатива Matlab/R): библиотеки Numpy, SciPy. Научный софт: Nmag и др.
+ \item Машинное обучение и Data science --- библиотеки Pandas, Scikit-Learn, PyBrain, Theano, Tensorflow и др.
+ \item Тестирование ПО.
+ \item Скрипты для автоматизации (замена bash).
+\end{itemize}
+
+\vspace{4mm}
+
+Основные реализации (интерпретаторы) Python: 
+\begin{itemize}
+ \item \textbf{CPython} --- наиболее распространенная, эталонная реализация языка Python. CPython является интерпретатором байт-кода, написан на C. Как следствие, хорошо интегрируется с кодом, написанными на C.
+ \item \textbf{Jython} = JAVA + Python. Позволяет запускать код Python на виртуальной машине JVM.
+ \item \textbf{IronPython} --- интерпретаор Python, написанный на C\#.  Для платформы Microsoft .NET или Mono. 
+ \item \textbf{PyPy} --- изначально был интерпретатором Python, написанным на Python. В текущих версиях используется JIT-компилятор, который превращает Python-код в машинный код во время выполнения программы. Производительность выше, чем у CPython. Имя пакета \verb|pypy|.
+\end{itemize}
+
+\vspace{4mm}
+
+\textbf{Cython} --- отдельный язык программирования с Python-подобным синтаксисом, который транслируется в код C/C++ и компилируется.
+
+\vspace{4mm}
+
+Среды разработки: 
+\begin{itemize}
+ \item Linux: \verb|sudo apt-get install python3 python3-numpy python3-pip| и т.д.
+ \item Windows: интерпретатор python + IDE PyCharm + Anaconda.
+ \item Android: \verb|QPython3|.
+\end{itemize}
+
+
+
+\subsection{Характеристика языка}$~$
+
+Python --- язык общего назначения, ориентированный на повышение производительности разработчика и читаемости кода (простой синтаксис + практичность).
+
+Python несколько парадигм программирования: структурное, объектно-ориентированное, функциональное, императивное и аспектно-ориентированное. 
+
+\vspace{3mm}
+
+Филосовия языка (<<The Zen of Python>> by Tim Peters, \verb|import this|):
+\begin{itemize}
+\item Красивое лучше, чем уродливое.
+\item Явное лучше, чем неявное.
+\item Простое лучше, чем сложное.
+\item Сложное лучше, чем запутанное.
+\item Читаемость имеет значение.
+\item Особые случаи не настолько особые, чтобы нарушать правила.
+\item При этом практичность важнее безупречности.
+\item Ошибки никогда не должны замалчиваться.
+\item Если не замалчиваются явно. \\ и т.д.
+\end{itemize}
+
+
+\vspace{5mm}
+
+В 2008 г. вышел Python 3.0, где устранены некоторые недостатки архитектуры. Неполная совместимость с Python 2.x. 
+
+
+\begin{table}[H]
+\caption{Python2 vs Python3}
+\begin{center}
+\begin{tabular}
+{|p{6cm}|p{6cm}|}
+\hline
+{\bf Python2}  & {\bf Python3} 
+\\
+\hline
+\verb|print "Hello"| & \verb|print("Hello")| \\
+\hline
+\verb|xrange(10)| & \verb|range(10)| \\
+\hline
+\verb|input()| & \verb|eval(input())| \\
+\hline
+\verb|5/2 == 2| & \verb|5/2 == 2.5| \\
+\hline
+\verb|len("Питон") == 10| & \verb|len("Питон") == 5| \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\begin{minted}{python}
+from __future__ import division
+\end{minted}
+
+\vspace{4mm}
+
+Python --- интерпретируемый язык. Основа интерптератора --- {\bf PVM} (Python Virtual Machine).
+
+\begin{figure}[h]
+\center{\includegraphics[width=0.8\linewidth]{pict/PVM.png}}
+%\caption{Изображение состояния кубита на сфере Блоха} %\label{fig:bloch}
+\end{figure}
+
+
+\newpage
+
+\subsection{Пример программы на Python}$~$
+
+\begin{minted}{python}
+#Пример программы
+import sys
+from math import sin, cos, sqrt
+from numpy import *
+print('Error', file=sys.stderr)
+\end{minted}
+
+\vspace{3mm}
+
+\verb|help()| --- справка;
+
+\verb|dir()| --- возвращает список атрибутов и методов произвольного объекта;
+
+\verb|type()| --- возвращает тип объекта;
+
+
+\vspace{5mm}
+
+
+\newpage
+
+\textbf{Часть 1. Синтаксические конструкции языка Python}
+
+\section{Типы данных в Python}$~$
+
+%\url{https://habrahabr.ru/post/319164/} --- Python: коллекции, часть 1/4: классификация, общие подходы и методы, конвертация
+
+Все данные в Python являются \textbf{объектами}, в том числе встроенные типы, функции, экземпляры классов и сами классы, модули и файлы, и т.д.
+
+В Python используется {\bf динамическая типизация}, т.е. тип данных определяется автоматически при присвоении значения переменной.
+
+Переменная создается в момент присваения ей значения.
+
+Присвоение значения осуществляется с помощью знака (\verb|=|).
+
+\verb|del| --- оператор удаления переменной.
+
+\begin{minted}{python}
+age = 23 # Присвоение значения 23 переменной age 
+print(age)
+country = "Swiss" 
+print(country)
+\end{minted}
+
+\begin{comment}
+Базовые (встроенные) типы данных в Python3: 
+\begin{itemize}
+\item Числовые типы:~~~~ \verb|int, float, complex| % long в Python2
+\item Строки (\verb|str|):~~~~~~ \verb|"Hello"| ~~либо~~ \verb|'Hello'|
+\item Множества (\verb|set|):~~~ \verb|{1,2,3}|
+\item Списки (\verb|list|):~~~~~~~ \verb|[True, 786, 3.14, 'text', 70.2]|
+\item Кортежи (\verb|tuple|):~~~~ \verb|(True, 786, 3.14, 'text', 70.2);|
+\item Словари (\verb|dict|): ~~~~~ \verb|{1 : 'One', 2 : 'Two'}|
+\item Файлы: ~~~~~~~~~~~~~~~~~~ \verb|f = open(filename)|
+\item Булевский тип (\verb|bool|): ~~ \verb|True, False|
+\item Прочие типы: ~~~~None (класс NoneType), сами типы (класс type).
+\end{itemize}
+\end{comment}
+
+
+\begin{table}[H]
+\caption{Встроенные типы данных Python3}
+\begin{center}
+\begin{tabular}
+{|p{4cm}|p{5cm}|p{9cm}|}
+\hline
+{\bf Типы данных}  & {\bf Класс} & {\bf Примеры литералов}
+\\
+\hline
+Булевский тип &  \verb|bool| & \verb|True, False| \\
+\hline
+Числовые типы	& \verb|int, float, complex| &  \verb|-5;  1.0;  3.5-1j| \\
+\hline
+Строки 		& \verb|str| 	& \verb|"Hello"| ~~либо~~ \verb|'Hello'| \\
+\hline
+Множества	 & \verb|set| 	& \verb|{1,2,3}| \\
+\hline
+Списки 		& \verb|list| 	& \verb|[], [True, 786, 3.14, 'text', 70.2]| \\
+\hline
+Кортежи 		& \verb|tuple| & \verb|(), (True, 786, 3.14, 'text', 70.2)| \\
+\hline
+Словари 		& \verb|dict| 	& \verb|{}, {1 : 'One', 2 : 'Two'}| \\
+\hline
+Файлы 		& 					 &  \verb|f = open(filename)| \\
+\hline
+<<Нулевой тип>> & \verb|NoneType| & \verb|None| \\
+\hline
+Прочие типы & \verb|type| &  \verb|int, str, ...| \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\vspace{5mm}
+
+Преобразование типов данных --- использовать конструктор: 
+\begin{minted}{python}
+int(x [,base]), float(x), complex(real [,imag]), 
+str(x), tuple(s), list(s), dict(d);
+ \end{minted}
+
+% Как определить размер объекта в Python?
+% sys.getsizeof(x) или метод объекта __sizeof__()
+
+Документация: \url{https://docs.python.org/3/library/stdtypes.html}
+
+\subsection{Булевский тип (bool)}$~$
+
+Значения: \verb|True, False|.
+
+Операции над типом bool: \verb| or, and, not|.
+
+В False преобразуются следующие объекты: None, False, 0, 0.0, 0j, Decimal(0), Fraction(0, 1); \verb|'', (), [], {}|, set(), range(0).
+
+\vspace{3mm}
+
+Операции сравнения типов: \verb|<, <=, >, >=, ==, !=, is, is not|.
+
+
+
+\subsection{Числовые типы}$~$
+
+Встроенные числые типы в Python3 --- \verb|int, float, complex|. \\
+(в python2 есть также long)
+
+Целый тип \verb|int| имеет произвольный диапазон значений.
+
+\vspace{3mm}
+
+Основные операции над числами: \verb|+ - * / **|.
+
+Целая часть и остаток: \verb|// %|.
+
+В Python3 операция \verb|/| всегда возвращает float, \verb|//| --- int или float.
+
+
+\vspace{3mm}
+
+Преобразование к другим система счисления: \verb|int, bin, hex, oct; int(str,base)|.
+
+Есть также \verb|format()| (и \verb|f'| в python-3.6):
+\begin{minted}{python}
+>>> bin(14)
+'0b1110'
+>>> format(14, 'b')
+'1110'
+>>> f'{14:b}'  # python >=3.6
+'1110'
+\end{minted}
+\vspace{3mm}
+
+Бесконечность:
+\begin{minted}{python}
+inf = float("inf")
+minus_inf = float("-inf")
+\end{minted}
+
+\vspace{3mm}
+
+Модули \verb|numbers, fractions| --- расширенные возможности для работы с числами.
+
+Встроенные математические функции: \verb|sqrt, abs, pow|. Больше в модуле \verb|math|.
+
+
+\subsection{Списки (класс list)}$~$
+
+\begin{minted}{python}
+a = [1, 3, 3, 2]
+print(a[0]) # обращение по индексу
+b = [x**2 for x in a]   # генератор списков
+print(a)   # [1, 3, 3, 2]
+print(b)   # [1, 9, 9, 4]
+del a[1]   # удаление элемента
+\end{minted}
+
+\verb|len()| --- встроенная функция, возвращает количество элементов в последовательности (в списке и т.п.).
+
+\verb|in| --- проверят, содержит ли последовательность данное значение (\verb|x in ls|).
+
+Некоторые методы класса list:
+\begin{itemize}
+ \item Вставка и удаление элементов: \verb|append(), insert(), remove(), pop()|.
+ \item Сортировка элементов списка: \verb|sort()| и \verb|reverse()|.
+ \end{itemize}
+(Например, \verb|insert(index, object)| --- для вставки нового элемента в середину или начало).
+
+
+\subsubsection{Копирование списков}
+
+\begin{minted}{python}
+>>> L = [1, 2, 3]
+>>> S = L
+>>> L[0] = 9   # изменим первый элемент списка L
+>>> L
+[9, 2, 3]
+>>> S				# в списке S первый элемент тоже изменился
+[9, 2, 3]		# так как это один и тот же список на самом деле
+
+\end{minted}
+
+Если же нам нужно сделать реальную копию списка, то для этих целей существует метод \verb|copy()|.
+
+\begin{minted}{python}
+>>> L = [1, 2, 3]
+>>> S = L.copy()
+>>> L[0] = 9
+>>> L
+[9, 2, 3]
+>>> S       # теперь все в порядка
+[1, 2, 3]   # список S не затронут
+\end{minted}
+
+Почему так?
+
+--- Инструкция присваивания (\verb|=|) всегда создает ссылку на объект (но не создает копии объектов).
+
+--- Переменные создаются при первом присваивании.
+
+--- Перед использованием переменной ей должно быть присвоено значение.
+
+\vspace{4mm}
+
+Способы копирования списков:
+\begin{minted}{python}
+a = [1, 2, 3] 
+b = a.copy()  # python >= 3.4
+b = a[:]
+import copy
+b = copy.copy(a)
+b = list(a)
+\end{minted}
+
+
+
+
+
+
+
+\vspace{3mm}
+{\bf Внутренняя реализация списков в CPython}
+
+Питоновкий \verb|list| --- аналог \verb|vector| в STL, и реализован как одномерный массив указателей, а именно в виде структуры
+
+\begin{minted}{c++}
+typedef struct {
+    PyObject_VAR_HEAD
+    PyObject **ob_item; // массив указат. на элементы списка
+    Py_ssize_t allocated; // количество выделенной памяти.
+} PyListObject;
+\end{minted}
+
+
+Сложность операций:
+\begin{itemize}
+ \item добавление (append) элемента в конец списка --- $O(1)$;
+ \item выталкивание (pop) --- $O(1)$;
+ \item вставка (insert) --- $O(n)$;
+ \item удаление (remove) --- $O(n)$;
+\end{itemize}
+\url{https://habrahabr.ru/post/273045/}
+
+
+
+\vspace{2mm}
+
+{\bf Сортировка} списков в Python осуществляется алгоритмом Timsort, который имеет следующую сложность: \\
+Time: best --- $O(n)$, average --- $O(n \log n)$, worst --- $O(n \log n)$; \\
+Memory: $O(n)$. \\
+(т.е. хороший по скорости, плохой по памяти; сравнение алгоритмов --- \url{https://habrahabr.ru/company/infopulse/blog/133303/})
+
+\vspace{3mm}
+
+Параметры функции сортировки:
+
+\verb'list.sort(key=func, reverse=True|False)'
+
+Примеры:
+\begin{minted}{python}
+lst.sort(key=lambda obj: obj.value)
+\end{minted}
+
+\vspace{3mm}
+
+
+
+
+
+\subsection{Кортежи (Класс tuple)}$~$
+
+\emph{Кортеж} --- это неизменяемая последовательность элементов.
+
+\begin{minted}{python}
+A = (1, 3, 3, 2)
+A = 1, 3, 3, 2
+B = 1,         # то же самое, что и (1,) или tuple([1])
+\end{minted}
+
+Применение:
+\begin{minted}{python}
+a, b = b, a
+\end{minted}
+
+\subsubsection{Зачем нужны кортежи?}
+
+\begin{itemize}
+ \item  обезопасить данные от случайного изменения;
+ \item  размер на 8(?) байт меньше, чем у списка;
+ \item  кортеж можно использовать в качестве ключа у словаря, т.к. он хешируем;
+ \item  прирост производительности; В CPython кортежи хранятся в одном блоке памяти, поэтому создание нового кортежа в худшем случае приводит к одному вызову для выделения памяти. Списки распределяются в двух блоках: фиксированный со всей информацией об объекте Python и блоком с переменным размером для данных. 
+\end{itemize}
+
+\begin{minted}{c++}
+typedef struct {
+    PyObject_VAR_HEAD
+    PyObject *ob_item[1];
+} PyTupleObject; 
+
+typedef struct {
+    PyObject_VAR_HEAD
+    /* Vector of pointers to list elements.  list[0] is ob_item[0], etc. */
+    PyObject **ob_item;
+    Py_ssize_t allocated;
+} PyListObject;
+\end{minted}
+
+\begin{minted}{python}
+sys.getsizeof((1,2,3,4,5))
+\end{minted}
+
+
+\subsection{Множества}$~$
+
+\begin{minted}{python}
+a = {1, 3, 3, 2}
+b = [x**2 for x in a]
+print(a)   # {1, 2, 3}
+print(b)   # [1, 4, 9]
+>>> 3 in a
+>>> 't' not in a
+\end{minted}
+
+Проверка \verb|in| для \verb|set| быстрее, чем для \verb|list|.
+
+
+
+
+\subsection{Словари}$~$
+
+Словарь (\verb|dict|) ---  неотсортированная колекция элементов, доступ к которым осуществляется по ключу.
+
+\begin{minted}{python}
+>>> d = {'black' : 0, 'white' : 1}
+>>> 'black' in d
+True
+\end{minted}
+
+\vspace{2mm}
+
+\verb|d.keys()|
+
+\verb|d.values()|
+
+\verb|d.items()|
+
+\vspace{2mm}
+
+
+\subsection{Строки}$~$
+
+Строки в python --- последовательности unicode-символов.
+
+Можно использовать апострофов либо кавычки. Оба варианта эквивалентны:
+
+\begin{minted}{python}
+s = 'python'
+s = "python"
+\end{minted}
+
+Тройные кавычки используются для записи многострочных блоков текста:
+\begin{minted}{python}
+text = '''многострочный
+	блок текста'''
+\end{minted}
+
+Строка --- неизменяемый объект.
+
+Сырая строка:
+
+\begin{minted}{python}
+s = r'\t\t\t'
+\end{minted}
+
+\subsubsection{Форматирование строк}$~$
+
+1) В стиле <<сишного printf>>:
+
+\begin{minted}{python}
+format % values
+\end{minted}
+
+Например,
+
+\begin{minted}{python}
+x = 7
+str = 'x=%d' % x            # out: x=7
+str = '%d+%d' % (x+1, x+2)  # out: 8+9
+str = '%(a)d %(b)d %(a)d' % {'a':x, 'b':x+1}  # out: 7 8 7
+\end{minted}
+
+\vspace{4mm}
+
+2) Метод \verb|format|:
+
+\begin{minted}{python}
+print('i={0:03d}: t={1:.3f}, p={2:.2e}'.format(4,4,4))
+t = 1000
+print('i={i:03d}: t={t:.3f}, p={p:.2e}'.format(t=t,i=3,p=10))
+\end{minted}
+
+3) Python >=3.6:
+
+\begin{minted}{python}
+x = 1000
+print(f'x = {x}')
+\end{minted}
+
+
+\subsubsection{Форматирование с помощью метода format}$~$
+
+\subsubsection{Операции над отдельными символами}$~$
+
+\verb|ord| --- 
+
+\vspace{3mm}
+Remark: Больше структур данных в модуле \verb|collections|.
+
+
+\subsection{is}$~$
+
+%\textbf{is} is used in Python for testing object identity. While the \verb|==| operator is used to test if two variables are equal or not, \textbf{is} is used to test if the two variables refer to the same object.
+
+\verb|is| сравнивает идентификаторы --- является ли это один и тот же объект.
+
+\verb|==| сравнивает объекты на равенство/неравенство.
+
+\begin{minted}{python}
+>>> a = 123456
+>>> b = 123456
+>>> a == b
+True
+>>> a is b
+False
+\end{minted}
+
+\begin{minted}{python}
+>>> [1, 2] == [1, 2]
+True
+>>> [1, 2] is [1, 2]
+False
+\end{minted}
+
+\pagebreak[2]
+\verb|id| --- идентификатор объекта: 
+\begin{minted}{python}
+>>> id(11)
+139113728
+>>> id(11)
+139113728
+>>> id(11111111111)
+3072215544
+>>> id(11111111111)
+3072216264
+\end{minted}
+
+Некоторые часто используемые объекты (например, True и False, все односимвольные строки и короткие числа) выделяются один раз интерпретатором, и каждая переменная, содержащая этот объект, ссылается на нее. Другие номера и более крупные строки выделяются по требованию.
+
+\vspace{3mm}
+
+\verb|type| --- определяет тип объекта:
+
+\begin{minted}{python}
+>>> type(55)
+<class 'int'>
+>>> type(55) == int
+True
+>>> type(55) is int
+True
+>>> print(int)
+<class 'int'>
+\end{minted}
+
+\vspace{3mm}
+
+\verb|isinstance(x, A)| --- определяет принадлежит ли объект \verb|x| данному классу \verb|A| либо производному от него.
+
+\vspace{3mm}
+
+\verb|is| рекомендуется используется для сравнения с \verb|None| (поскольку \verb|==| может быть переопределен через \verb|__eq__|).
+
+
+
+
+
+
+
+
+%------------------------------------------
+\newpage
+
+\section{Управляющие операторы (циклы и ветвления)}
+
+\begin{itemize}
+ \item Ветвление: \verb|if|/\verb|elif|/\verb|else|.
+ \item Циклы: \verb|while|, \verb|for|.
+\end{itemize}
+
+
+\subsection{if}
+
+\begin{minted}{python}
+if <условие1>:
+	<блок1>
+elif <условие2>:
+	<блок2>	
+else:
+	<блок3>	
+\end{minted}
+
+Например,
+
+\begin{minted}{python}
+if 1 > 2:
+	print('условие выполнено')
+\end{minted}
+
+
+Нет оператора множественного выбора (switch -- case) как в C++. Используется \verb|if|/\verb|elif|/.../\verb|elif|/\verb|else|.
+
+\vspace{3mm}
+
+Тернарный оператор:
+\begin{minted}{python}
+res = 'even' if x % 2 == 0 else 'odd'
+\end{minted}
+
+
+\subsection{Циклы}
+
+Операторы циклов:
+\begin{itemize}
+ \item \verb|for .. in ..| --- обход всех элементов коллекции;
+ \item \verb|while| --- цикл с предусловием\footnote{В Python нет цикла с постусловием do...while}.
+\end{itemize}
+
+Например,
+
+\begin{minted}{python}
+for x in {3, 2, 1}:
+	print(x)
+\end{minted}
+
+Стандартная форма цикла \verb|while| следующая:
+
+\begin{minted}{python}
+while <условие>:
+	<блок>
+\end{minted}
+
+Совместно с инструкциями циклов могут использоваться стандартные инструкции \verb|break| и \verb|continue|, а также менее стандартные инструкции --- \verb|pass| и \verb|else|. Инструкция \verb|pass| --- это пустая инструкция, которая ничего не делает. Инструкция \verb|else| располагается после цикла и всегда выполняется в том случае, если цикл завершается обычном способом (без прерывания с помощью \verb|break|).
+
+Сделаем сразу замечание относительно выделения блоков кода. В отличие от многих других языков программирования, в  Python отсутствуют какие-либо ключевые слова или конструкции для выделения блока (как, например, begin...end в языке Паскале или фигурные скобки в C++). Вместо этого используются горизонтальные отступы для того, чтобы дать понять интерпретатору, где заканчивается данный блок. Например,
+
+\begin{minted}{python}
+for x in [1, 2]:
+	print(x)
+	print(x^2)
+print(x^3)
+\end{minted}
+
+В этом примере 2-ая и 3-я строки кода включены в тело цикла for и поэтому будут выполнены дважды (для x=1 и x=2), а инструкция 4-ой строки расположена после окончания цикла, и значит выполнится только один раз (для x=2).
+
+Для формирования последовательностей чисел с заданным шагом существует функция \\
+\verb|range(start, stop, step)|. Если \verb|step>0|, то она возвращает возврастающую последовательность чисел с условием 
+
+\verb|start <= start + i * step < stop|, 
+
+где i --- целое неотрицательное число. Например, 
+
+\begin{minted}{python}
+>>> list(range(0, 10, 2))
+[0, 2, 4, 6, 8]
+\end{minted}
+
+
+Функция range часто используется в циклах. Например, следующий код напечатает в консоль последовательность чисел 0, 2, 4, 6, 8.
+
+\begin{minted}{python}
+for x in range(0, 10, 2):
+	print(x)
+\end{minted}
+
+Кроме того, \verb|range| вместе с \verb|for| часто используются для генерации списков (или других последовательностей), что демонстрирует следующий пример:
+
+\begin{minted}{python}
+>>> [x**2 for x in range(0, 10, 2)]
+[0, 4, 16, 36, 64]
+\end{minted}
+
+
+
+
+
+
+%------------------------------------------
+\newpage
+
+\section{Функции}
+
+Объявление функции
+
+\begin{minted}{python}[caption=Пример функции]
+def func(x):
+	return x*x
+y = func(9)
+print(y)
+\end{minted}
+
+По умолчанию переменные локальные, т.е. находится в локальной области видимости этой функции.
+
+Однако можно обратиться и изменять глобальные переменные, т.е. переменные, объявленные на верхнем уровне модуля.
+
+\begin{minted}{python}[caption=Использование global]
+y = 1;
+def func():
+	global y
+	y = 2
+func()
+print('y =',y) # Result: y = 2
+\end{minted}
+
+
+\subsection{Параметры по умолчанию}$~$
+
+
+\begin{minted}{python}
+def f(x, y = 3):
+   return x+y
+>>> f(5,6)
+11
+>>> f(5)
+8
+\end{minted}
+
+\begin{minted}{python}[caption=Что буде выведено?]
+def foo(a=[]):
+    a.append(1)
+    print(a)
+foo()
+foo()
+foo()
+\end{minted}
+
+Значения по-умолчанию вычисляются один раз в момент объявления функции и ссылка на него сохраняется в атрибуте \verb|__defaults__| (для Python3).2
+
+\begin{minted}{python}
+def foo(a=[]):
+	a.append(1)
+	print(id(a))
+foo()
+foo()
+foo()
+\end{minted}
+
+
+
+
+\subsection{$\lambda$-функции}$~$
+
+Лямбда-функция (или анонимная функция) --- это функция, при определении которой не нужно указывать ее имя. 
+
+\begin{minted}{python}
+func = lambda x, y: x**2 + y**2
+func(2, 3)
+\end{minted}
+
+\begin{minted}{python}
+(lambda x: x+2)(5)
+\end{minted}
+
+Замыкания:
+
+\begin{minted}{python}
+multiplier = lambda n: lambda k: n*k
+mul2 = multiplier(2) # mul2 - функция, умножающая на 2
+\end{minted}
+
+
+
+%===============================================
+
+\section{Модули}$~$
+
+\section{Классы (ООП). Основы}$~$
+
+Общая форма:
+
+\begin{minted}{python}
+class Name (superclass, ...):
+	value = 0
+	def method(self, param):
+		self.member = param
+		print(self.member, Name.value)
+\end{minted}
+
+В Python3 используется только <<новый стиль>> классов, в котором:
+\begin{itemize}
+ \item все классы явно или неявно являются потомками класса \verb|object|.
+ \item допускается множественно наследие.
+\end{itemize}
+
+\vspace{3mm}
+
+Наследование атрибутов:
+
+экземпляр-класса-B $\to$ класс-B $\to$ класс-A
+
+
+
+\vspace{5mm}
+
+Рекомендации
+
+1. Если вы видите класс с двумя методами, включая \verb|__init__|, то это не класс. Достаточно одной функции. В стандартной библиотеке полно готовых классов.
+
+2. Не создавайте новых исключений, если они не нужны (а они не нужны).
+
+
+
+%----------------------------------
+\section{Исключения}$~$
+
+\begin{minted}{python}
+try:
+	print('try block')
+	raise Exception('some_error')
+	print('after raise')
+except Exception as ex:
+	print('there was an exception: ' + str(ex))
+else:
+	print('there was no exceptions')
+finally:
+	print('finally block')
+\end{minted}
+
+Иерархия системных исключений:
+
+BaseException $\leftarrow$ Exception $\leftarrow$ ArithmeticError $\leftarrow$ ZeroDivisionError
+
+\vspace{3mm}
+
+Подклассы \verb|BaseException|: SystemExit, KeyboardInterrupt, GeneratorExit.
+
+Подклассы \verb|Exception|: ArithmeticError, StopIteration, SyntaxError и др.
+
+\url{https://docs.python.org/3/tutorial/errors.html}
+
+
+\subsection{assert}$~$
+
+\verb|assert| --- замена <<\verb|if ... raise|>> --- проверяет условие на истинности. Если не верно, то возбуждает исключение.
+\begin{minted}{python}
+	assert count >= 0
+\end{minted}
+
+
+
+\newpage
+
+%===============================================
+
+\section{Итераторы и генераторы}$~$
+
+\url{https://shepetko.com/ru/blog/python-iterable-iterators-generators}
+
+Основные понятия:
+\begin{itemize}
+ \item {\bf контейнер} (\verb|container|) --- тип данных, предназначенный для хранения элементов: \verb|list, tuple, set, frozenset, dict| и др.
+ 
+ \item {\bf итерируемый объект} (\verb|iterable|) --- любой объект, который может предоставить \emph{итератор} (с помощью функции \verb|iter()| или метода \verb|__iter__()|).
+ 
+ \item {\bf итератор} (\verb|iterator|) ---  это вспомогательный объект, который возвращает следующий элемент основного <<контейнера>> при выполнении функции \verb|next()| или метода \verb|__next__()|);
+ 
+ \item {\bf функция-генератор} (\verb|generator function|) --- <<ленивая>> функция, содержащая \verb|yield| (обычно вместо \verb|return|);
+ 
+ \item {\bf генераторное выражение} (\verb|generator expression|) --- выражение вида \\ \verb|(x * x for x in numbers)|
+ 
+ \item {\bf генератор списков} (списочное включение) (\verb|list comprehension|) --- выражение вида \verb|[x * x for x in numbers]| или \verb|{x * x for x in numbers]}|
+\end{itemize}
+
+
+\subsection{Генераторы списков}$~$
+
+(чем проще, тем лучше)
+
+\begin{minted}{python}
+>>> a = [1, 2, 3, -2]
+>>> [x**2 for x in a]
+[1, 4, 9, 4]
+>>> {x**2 for x in a}
+{1, 9, 4}
+\end{minted}
+
+\subsection{Функции-генераторы}$~$
+
+Функции-генераторы реализуют \emph{отложенные вычисления} и автоматически поддерживают протокол итераций.
+
+Функция-генератор не возвращается значение (\verb|return|), а \emph{поставляет} его (инструкция \verb|yield|):
+\begin{itemize}
+ \item при выполнении \verb|yield| функция приостанавливает работу;
+ \item функция передает значение вызывающей программе;
+ \item функция возобновляет работу с того же места (после инструкции \verb|yield|).
+\end{itemize}
+
+\begin{minted}{python}
+def genfunc():
+	for i in range(0, 5):
+		yield i**2
+
+for x in genfunc():
+	print(x)
+\end{minted}
+
+или явно:
+
+\begin{minted}{python}
+genobj = genfunc()
+for x in genobj:
+	print(x)
+\end{minted}
+
+Функция-генератор возвращает объект-генератор. 
+
+\begin{minted}{python}
+>>> genfunc()
+<generator object genfunc at 0xb63f25a4>
+\end{minted}
+
+Объект-генератор может использоваться только {\bf один раз} (однократное выполнение итерационного процесса).
+
+Итератор можно создать вручную:
+
+\begin{minted}{python}
+>>> genobj = genfunc()  # возвращает объект-генератор
+>>> it = iter(genobj)   # it - итератор
+>>> next(it)
+0
+>>> next(it)
+1
+>>> list(genobj)
+[4, 9, 16]
+\end{minted}
+
+
+
+\subsection{Генераторное выражение}$~$
+
+Генераторное выражение --- еще один способ создания объекта-генератора:
+
+\begin{minted}{python}
+genobj = (i**2 for i in range(0,5))
+\end{minted}
+
+
+Упражнение:
+\begin{minted}{python}
+g = (print(i) for i in range(0,5))
+list(g)
+\end{minted}
+
+
+\subsection{Итерируемые объекты}$~$
+
+Итератор с помощью \verb|iter()| можно получить либо по генератору (функция-генератор или выражение-генератор), либо по итерируемому объекту.
+
+\emph{Итерируемым объект} --- это объект, который может предоставить итератор. Говорят также, что такой объект поддерживающий интерфейс итератора.
+
+Итерируемым объектом является:
+\begin{itemize}
+ \item большинство контейнеров (напр., list, tuple);
+ \item любой объект, имеющий метод \verb|__iter__()|.
+\end{itemize}
+
+Примеры:
+\begin{minted}{python}
+it = iter(['a','b','c'])
+next(it)
+it.__next__()
+\end{minted}
+
+\begin{minted}{python}
+class A:
+	def __iter__(self):
+		return self
+	def __next__(self):
+		return 'ok'
+a = A()
+it = iter(a)
+print(next(it))
+\end{minted}
+
+В последнем случае итератор совпадает с сами итерируемым объектом, поэтому можно написать (в общем случае это не так):
+\begin{minted}{python}
+print(next(a))
+\end{minted}
+
+Вс\"е в месте:
+
+\begin{figure}[H] 
+\center{\includegraphics[width=1.0\linewidth]{pict/iter1.png}}
+\caption{Итераторы и генераторы}
+\end{figure}
+
+Больше примеров:
+
+1) \verb|range| --- это класс, экземплярами которого являются итерируемые объекты (но не контейнерами!)
+\begin{minted}{python}
+>>> r = range(10)
+>>> it = iter(r)
+>>> next(it)
+0
+\end{minted}
+
+2) Цикл \verb|for| реализует итерационный контекст и работает следующим образом:
+
+\begin{itemize}
+ \item пытается вызвать метод \verb|__iter__|, и если он есть, то получает итератор и запускает итерационный процесс;
+ \item в противном случае пытается возвать метод \verb|__getitem__(self,i)|, многократно применяя операцию индексирования с индексом $i$ от $0$ до $\infty$ --- до тех пор, пока не будет сгенерировано исключение \verb|StopIteration|.
+\end{itemize}
+
+
+\begin{minted}{python}
+class A: 
+	def __getitem__(self, i):
+		if i > 1000:
+			raise StopIteration
+		return i
+a = A()
+for x in a:
+	print('x = ' + str(x))
+\end{minted}
+
+(получается, достаточно иметь метод getitem, чтобы быть iterable)
+
+Но лучше как-то так:
+\begin{minted}{python}
+class Iterator:
+	def __init__(self):
+		self.k = 0
+	def __next__(self):
+		print('k = ' + str(self.k))
+		self.k += 1
+		if self.k > 1000:
+			raise StopIteration
+		return self.k
+
+class A:
+	def __iter__(self):
+		return Iterator()
+	
+a = A()
+for x in a:
+	print(x)
+\end{minted}
+
+\subsection{Функции enumerate и sorted}$~$
+
+\begin{itemize}
+ \item enumerate()
+ \item sorted()
+\end{itemize}
+
+Примеры:
+
+\begin{minted}{python}
+sequence = [1, 2, 7, 19]
+	
+idx = 0
+for item in sequence:
+	print(idx, item)
+	idx += 1
+	
+for idx, item in enumerate(sequence):
+	print(idx, item)
+\end{minted}
+
+
+
+
+\subsection{Модуль itertools}$~$
+
+\begin{itemize}
+ \item \verb|itertools.chain()| --- объединяет два разных итератора в один: \\
+	\verb|for i in itertools.chain(it1, it2)|.
+ \item \verb|itertools.cycle()| --- бесконечно повторяет заданную последовательность: \\
+	\verb|for i in itertools.cycle([1,2,3])|.
+\end{itemize}
+
+
+
+
+
+%------------------------------------
+\section{Магические методы и перегрузка операторов}$~$
+
+\url{https://habrahabr.ru/post/186608/}
+
+\emph{Магические методы} --- специальные методы класса с именами вида \verb|__method__|, которые вызываются 
+
+
+
+
+
+
+
+%------------------------------------
+\section{Шаблоны (паттерны) проектирования}$~$
+
+\subsection{Декораторы}$~$
+
+\emph{Декоратор} (decorator) --- структурный шаблон проектирования, предназначенный для динамического подключения дополнительного поведения к объекту (например, классу или функции). 
+% В JAVA аннотация \verb|@Override| просто указывает компилятору, что метод будет переопределяться (чтобы выводить предупреждение, если в базовом классе такого метода нет)
+
+Декораторы функций --- это <<об\"ертки>> функций, которые дают нам возможность изменить поведение функции, не изменяя ее код.
+
+Декораторы функций обеспечивают способ определения специальных режимов работы функций, обертывая их дополнительным слоем логики, реализованной в виде других функций.
+
+\emph{Метафункция} --- это функция или объект, который управляет другой функцией.
+
+Пример:
+
+\begin{minted}{python}
+def decor(f):   # метафункция
+	newf = lambda x: '<<< ' + str(f(x)) + ' >>>'
+	return newf
+	
+def func(x):    # наша функция
+	return(2*x)
+
+print('func(3) = ' + str(func(3)))
+func = decor(func)  # декорирование
+print('func(3) = ' + str(func(3)))
+\end{minted}
+
+В Python используется следующий (более явный) синтаксис:
+
+\begin{minted}{python}
+@decor
+def square(x):
+	return(x**2)
+\end{minted}
+
+что аналогично:
+
+\begin{minted}{python}
+def square(x):
+	return(x**2)
+square = decor(square)
+\end{minted}
+
+
+Вложенные декотораторы:
+
+\begin{minted}{python}
+@A
+@B
+@C
+def f(): ...
+\end{minted}
+работает как
+\begin{minted}{python}
+f = A(B(C(f)))
+\end{minted}
+
+Замечания:
+
+1) Декоратором может быть класс:
+
+\begin{minted}{python}
+class decor(): 
+	def __init__(self, func):
+		self.func = func
+	def __call__(self, *args):
+		return '<<< ' + str(self.func(args[0])) + ' >>>'
+\end{minted}
+
+2) Декоратор может иметь параметры:
+
+\begin{minted}{python}
+@paramdecor(a, b)
+def f(): ...
+\end{minted}
+
+Это эквивалентно
+
+\begin{minted}{python}
+f = paramdecor(a,b)(f)
+\end{minted}
+
+--- здесь мы имеем дело с <<декорированием декоратора>>:
+
+\begin{minted}{python}
+def paramdecor(a, b):  
+	def decor(f):       
+		newf = lambda x: a + ' ' + str(f(x)) + ' ' + b
+		return newf
+	return decor
+
+@paramdecor('[[[', ']]]')
+def square(x):
+	return(x**2)
+\end{minted}
+
+Реальный пример:
+
+\begin{minted}{python}
+app = Flask(__name__)
+@app.route('/hello/<name>')
+def hello(name=None):
+    return render_template('hello.html', name=name)
+\end{minted}
+
+
+
+\subsection{Метаклассы}$~$
+
+
+
+%=======================
+
+\section{ПРИЛОЖЕНИЕ}
+
+\subsection{Полезные функции}$~$
+
+\verb|exec(obj[, globals[, locals]])| --- динамически исполняет указанный код. Здесь obj --- cтрока кода, либо объект кода.
+
+
+\verb|eval(expression, globals=None, locals=None)| --- разбирает и исполняет указанное выражение. Возвращает какой-то результат.
+
+Например, \verb|x = 1; eval('x+1')|.
+
+Функциям eval() и exec() можно передавать результаты функций globals() и locals().
+
+
+
+
+\subsection{Рецепты}
+
+\subsubsection{Определить индекс минимального элемента в списке values}
+
+\begin{minted}{python}
+import operator
+min_index, min_value = min(enumerate(values), key=operator.itemgetter(1))
+max_index, max_value = max(enumerate(values), key=operator.itemgetter(1))
+\end{minted}
+
+
+
+
+
+\begin{thebibliography}{10}
+
+\bibitem{Lutc} Лутц, М. Изучаем Python / М. Лутц. --- 4-ое изд. --- Пер. с англ. --- СПб.: Символ-Плюс, 2011. --- 1280 с.
+
+\bibitem{Suzi} Сузи Р. А. Python : [полное руководство]. --- Санкт-Петербург [и др.] : БХВ-Петербург, 2002. --- 748 с. [чз]
+
+\bibitem{Silen} Силен Д. Основы Data Science и Big Data. Python и наука о данных / [пер. с англ. Е. Матвеева]. --- Санкт-Петербург [и др.] : Питер, 2017. --- 336 с. 
+
+
+\end{thebibliography}
+
+\end{document} 
+

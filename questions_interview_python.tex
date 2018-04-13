@@ -1,0 +1,175 @@
+\input{_head.tex}
+\newif\ifFULL
+\FULLtrue
+
+\setminted[python]{bgcolor=white,linenos,numbersep=12pt,tabsize=3}
+
+\begin{document}
+\footskip=30pt
+\date{}
+\title{Flask}
+\maketitle
+\pagestyle{plain}
+%\fontsize{13}{14pt}\selectfont   
+%\fontsize{11}{12pt}\selectfont   
+\setcounter{secnumdepth}{2}  % turn off numeration of sections
+\input{styles/style_python.tex}
+
+
+\section{MyCode}
+
+\begin{minted}{python}
+# TASK1
+def solution(A):
+	count_hills = 0  # number of hills
+	count_valleys = 0 # number of valleys
+	prev = A[0] # previous element
+	change = 0  # = +1 if the height of terrain increases, -1 if it decreases
+	for i in range(1, len(A)):		
+		if prev < A[i]:
+			if change != 1:
+				count_valleys += 1
+			change = 1
+		elif prev > A[i]:
+			if change != -1:
+				count_hills += 1
+			change = -1
+		prev = A[i]  
+	total_count = count_valleys + count_hills + 1 # Here we assume that there's always one hill or valley
+	return total_count 
+\end{minted}
+
+\begin{minted}{python}
+import math
+
+def solution(S):
+	sec_in_minute = 60
+	lines = S.split('\n')
+	calls = dict()  
+	
+	for line in lines:
+		duration_str, phone_number = line.split(',')
+		hh, mm, ss = duration_str.split(':')
+		duration = int(ss) + sec_in_minute * int(mm) 
+			+ sec_in_minute**2 * int(hh)		
+		cost = 3 * duration if duration < 5 * sec_in_minute else 150 
+			* math.ceil(duration / sec_in_minute)
+		
+		if phone_number in calls:
+			calls[phone_number][0] += duration
+			calls[phone_number][1] += cost
+		else:
+			calls[phone_number] = [duration, cost]		
+	
+	# the longest total duration
+	max_total_duration = max( calls[x][0] for x in calls )
+	numbers_with_max_total_duration = 
+	        [k for k in calls if calls[k][0] == max_total_duration]		
+	numbers_with_max_total_duration.sort()
+	
+	# the smallest number among numbers with the longest total duration
+	smallest_number = numbers_with_max_total_duration[0]
+	calls[smallest_number][1] = 0  # now it's free 
+	total_cost = sum(calls[x][1] for x in calls)
+	return total_cost 
+\end{minted}
+
+
+
+\section{Вопросы}
+
+\begin{itemize}
+\item 1. Стандартные типы данных 
+
+\item 2. Разница между \verb|list| и \verb|tuple|
+
+\item 3. Множества (\verb|set|) 
+
+Множества примечательны тем, что операция проверки <<принадлежит ли объект множеству>> происходит значительно быстрее аналогичных операций в других структурах данных.
+
+Следует использовать, когда необходимо проверять принадлежит ли значение набору уникальных элементов и отсутствует необходимость поддерживать порядок в данном наборе.
+
+\item 4. Стандартные библиотеки (sys, os, re, datetime) 
+
+\item 5. PEP8 
+
+\item 6. variable swap (x, y = y, x) 
+
+\item 7. Разница между range() и xrange() 
+
+\item 8. Минимальное значение в листе 
+
+\item 9. Удалить повторяющиеся элементы в листе 
+
+\item 10. str.split() 
+
+\item 11. Mutable and immutable types 
+
+\item 12. Менеджеры контекста 
+
+\item 13. Итераторы и генераторы 
+
+\item 14. yield 
+
+\item 15. lambda functions 
+
+\item 16. Разница между методом класса и статическим методом 
+
+\item 17. Анонимные функции 
+
+\item 18. Шаблоны проектирования (Singleton, Decorator, etc) - для чего надо, назвать примеры декораторов 
+
+\item 19. Магические методы:
+
+Магические методы --- специальные методы, позволяющий классам определять свое поведение в отношении операторов языка (т.е. перегружать операторы).
+
+В CPython почти все магические методы хранятся в специальных слотах в типе.
+
+\item 20. Sync and wait (python 3.5) 
+
+\item 21. Плюсы и минусы множественного наследования (это зло) 
+
+\item 22. New style and old style classes 
+
+Начиная с версии 3.0, старые классы больше не поддерживаются, а все пользовательские классы по умолчанию происходят от класса object. В Питоне-3 используется алгоритм C3.
+\url{https://habrahabr.ru/post/62203/}
+
+
+\item 23. MRO (Method Resolution Order)
+
+Мethod resolution order (MRO) --- порядок разрешения методов.  Определяет, из какого класса-предка нужно вызывать метод, если он не обнаружен непосредственно в классе-потомке. Такой вопрос возникает только при множественном наследовании.
+
+\item 24. \verb|_slots_|
+
+\item 25. Дескриптор протокола: переопределение методов \verb|__get__|, \verb|__set__| и \verb|__delete__| для определения поведения атрибута объекта.
+
+\item 26. Multiprocessing and threading
+
+\item 27. Metaclasses 
+
+\item 28. Функция type()?
+\end{itemize}
+
+
+
+\section{1}
+
+
+\begin{minted}[bgcolor=codecolor,linenos,numbersep=12pt,tabsize=3]{python}
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def hello_world():
+    return 'Hello World!'
+
+if __name__ == '__main__':
+    app.run()
+\end{minted}
+
+
+
+
+\end{document} 
+
+

@@ -22,8 +22,8 @@
 
 \begin{itemize}
  \item \verb|namedtuple()| ---	factory function for creating tuple subclasses with named fields;
- \item \verb|deque| --- 	list-like container with fast appends and pops on either end;
- \item \verb|ChainMap| --- 	dict-like class for creating a single view of multiple mappings;
+ \item \verb|deque| ---  list-like container with fast appends and pops on either end;
+ \item \verb|ChainMap| --- dict-like class for creating a single view of multiple mappings;
  \item \verb|Counter| --- 	dict subclass for counting hashable objects;
  \item \verb|OrderedDict| --- 	dict subclass that remembers the order entries were added;
  \item \verb|defaultdict| --- 	dict subclass that calls a factory function to supply missing values;
@@ -31,6 +31,8 @@
  \item \verb|UserList| --- 	wrapper around list objects for easier list subclassing;
  \item \verb|UserString| --- 	wrapper around string objects for easier string subclassing.
 \end{itemize}
+
+\subsection{deque}
 
 Основные методы класса \verb|deque|: 
 \begin{itemize}
@@ -41,7 +43,24 @@
 \end{itemize}
 Также есть методы \verb|clear(), copy(), count(), index, insert, remove|,\\  \verb|reverse, rotate|.
 
+\subsection{namedtuple}
 
+\begin{minted}{python}
+ntup = namedtuple('a','b')
+ntup.a = 5
+ntup.b = 5
+ntup.a += ntup.b
+\end{minted}
+
+
+
+
+
+
+
+
+
+\section{pandas}
 
 \begin{lstlisting}
 data = {'Name': ['Vasya', 'Dmitry', 'Petya'], 'Mark': [7.2, 8.2, 9.0], 'IQ': [100, 120, 119]}
